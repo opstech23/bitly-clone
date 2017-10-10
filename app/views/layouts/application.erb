@@ -1,8 +1,24 @@
 <html>
 	<head>
-		<title>Sinatra Framework</title>
+		<title>Don</title>
+		<link rel="stylesheet" href="css/abc.css">
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="js/application.js"></script>
 	</head>
 	<body>
-		<%= yield %>
+
+		<header>
+      <div class="logo">
+        <h1>Bitly</h1>
+      </div>
+      <div class="nav-links" id="nav-links">
+        <a href="#">Tour</a>
+        <a href="#">Enterprise</a>
+        <a href="#">Resources</a>
+        <a href="https://bitly.com/blog/" target="_blank">Blog</a>
+        <a href="https://bitly.com/pages/about" target="_blank">About</a>
+      </div>
+    </header>
+			<%= yield %>
 	</body>
 </html>

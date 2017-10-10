@@ -1,0 +1,90 @@
+Url.create(:long_url => "https://www.youtube.com/watch?v=Ctw5JOfZhhs").valid? # => true
+Url.create(:long_url => nil).valid? # => false
+
+
+
+donp@SithLord:~/Desktop/NEXT/bitly-clone$ rake console
+irb(main):001:0> Url.create(:long_url => "https://www.youtube.com/watch?v=Ctw5JOfZhhs").valid?
+D, [2017-10-09T12:21:11.425080 #6913] DEBUG -- :    (0.2ms)  BEGIN
+D, [2017-10-09T12:21:11.431505 #6913] DEBUG -- :   Url Exists (0.4ms)  SELECT  1 AS one FROM "urls" WHERE LOWER("urls"."long_url") = LOWER($1) LIMIT $2  [["long_url", "https://www.youtube.com/watch?v=Ctw5JOfZhhs"], ["LIMIT", 1]]
+D, [2017-10-09T12:21:11.464824 #6913] DEBUG -- :   SQL (32.1ms)  INSERT INTO "urls" ("long_url", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["long_url", "https://www.youtube.com/watch?v=Ctw5JOfZhhs"], ["created_at", "2017-10-09 04:21:11.432144"], ["updated_at", "2017-10-09 04:21:11.432144"]]
+D, [2017-10-09T12:21:11.502626 #6913] DEBUG -- :    (37.3ms)  COMMIT
+D, [2017-10-09T12:21:11.504524 #6913] DEBUG -- :   Url Exists (0.6ms)  SELECT  1 AS one FROM "urls" WHERE LOWER("urls"."long_url") = LOWER($1) AND ("urls"."id" != $2) LIMIT $3  [["long_url", "https://www.youtube.com/watch?v=Ctw5JOfZhhs"], ["id", 22], ["LIMIT", 1]]
+=> true
+irb(main):002:0> Url.create(:long_url => nil).valid?
+D, [2017-10-09T12:21:32.400963 #6913] DEBUG -- :    (0.3ms)  BEGIN
+D, [2017-10-09T12:21:32.416075 #6913] DEBUG -- :   Url Exists (0.3ms)  SELECT  1 AS one FROM "urls" WHERE "urls"."long_url" IS NULL LIMIT $1  [["LIMIT", 1]]
+D, [2017-10-09T12:21:32.416647 #6913] DEBUG -- :    (0.2ms)  ROLLBACK
+D, [2017-10-09T12:21:32.417504 #6913] DEBUG -- :   Url Exists (0.2ms)  SELECT  1 AS one FROM "urls" WHERE "urls"."long_url" IS NULL LIMIT $1  [["LIMIT", 1]]
+=> false
+irb(main):003:0> u = Url.new
+=> #<Url id: nil, short_url: nil, long_url: nil, created_at: nil, updated_at: nil>
+irb(main):004:0> u.errors
+=> #<ActiveModel::Errors:0x0000557ba0a06f60 @base=#<Url id: nil, short_url: nil, long_url: nil, created_at: nil, updated_at: nil>, @messages={}, @details={}>
+irb(main):005:0> u.valid?
+D, [2017-10-09T12:27:08.898364 #6913] DEBUG -- :   Url Exists (0.6ms)  SELECT  1 AS one FROM "urls" WHERE "urls"."long_url" IS NULL LIMIT $1  [["LIMIT", 1]]
+=> false
+irb(main):006:0> u.errors?
+NoMethodError: undefined method `errors?' for #<Url:0x0000557ba0b08e40>
+Did you mean?  errors
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activemodel-5.1.4/lib/active_model/attribute_methods.rb:432:in `method_missing'
+	from (irb):6
+	from /home/donp/.rbenv/versions/2.4.2/bin/irb:11:in `<main>'
+irb(main):007:0> u.errors
+=> #<ActiveModel::Errors:0x0000557ba0a06f60 @base=#<Url id: nil, short_url: nil, long_url: nil, created_at: nil, updated_at: nil>, @messages={:long_url=>["can't be blank", "format is not good"]}, @details={:long_url=>[{:error=>:blank}, {:error=>:invalid, :value=>nil}]}>
+irb(main):008:0> u = Url.create
+D, [2017-10-09T12:27:33.111681 #6913] DEBUG -- :    (0.3ms)  BEGIN
+D, [2017-10-09T12:27:33.113444 #6913] DEBUG -- :   Url Exists (0.4ms)  SELECT  1 AS one FROM "urls" WHERE "urls"."long_url" IS NULL LIMIT $1  [["LIMIT", 1]]
+D, [2017-10-09T12:27:33.114327 #6913] DEBUG -- :    (0.3ms)  ROLLBACK
+=> #<Url id: nil, short_url: nil, long_url: nil, created_at: nil, updated_at: nil>
+irb(main):009:0> u.errors
+=> #<ActiveModel::Errors:0x0000557ba1cb0fd0 @base=#<Url id: nil, short_url: nil, long_url: nil, created_at: nil, updated_at: nil>, @messages={:long_url=>["can't be blank", "format is not good"]}, @details={:long_url=>[{:error=>:blank}, {:error=>:invalid, :value=>nil}]}>
+irb(main):010:0> u.save
+D, [2017-10-09T12:28:43.621769 #6913] DEBUG -- :    (0.4ms)  BEGIN
+D, [2017-10-09T12:28:43.624078 #6913] DEBUG -- :   Url Exists (0.6ms)  SELECT  1 AS one FROM "urls" WHERE "urls"."long_url" IS NULL LIMIT $1  [["LIMIT", 1]]
+D, [2017-10-09T12:28:43.625198 #6913] DEBUG -- :    (0.3ms)  ROLLBACK
+=> false
+irb(main):011:0> u.save!
+D, [2017-10-09T12:28:50.551208 #6913] DEBUG -- :    (0.4ms)  BEGIN
+D, [2017-10-09T12:28:50.553907 #6913] DEBUG -- :   Url Exists (0.7ms)  SELECT  1 AS one FROM "urls" WHERE "urls"."long_url" IS NULL LIMIT $1  [["LIMIT", 1]]
+D, [2017-10-09T12:28:50.555316 #6913] DEBUG -- :    (0.3ms)  ROLLBACK
+ActiveRecord::RecordInvalid: Validation failed: Long url can't be blank, Long url format is not good
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/validations.rb:78:in `raise_validation_error'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/validations.rb:50:in `save!'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/attribute_methods/dirty.rb:43:in `save!'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:313:in `block in save!'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:384:in `block in with_transaction_returning_status'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/connection_adapters/abstract/database_statements.rb:235:in `block in transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/connection_adapters/abstract/transaction.rb:194:in `block in within_new_transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/2.4.0/monitor.rb:214:in `mon_synchronize'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/connection_adapters/abstract/transaction.rb:191:in `within_new_transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/connection_adapters/abstract/database_statements.rb:235:in `transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:210:in `transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:381:in `with_transaction_returning_status'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:313:in `save!'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/suppressor.rb:46:in `save!'
+	from (irb):11
+	from /home/donp/.rbenv/versions/2.4.2/bin/irb:11:in `<main>'
+irb(main):012:0> Url.create!
+D, [2017-10-09T12:29:05.951403 #6913] DEBUG -- :    (0.2ms)  BEGIN
+D, [2017-10-09T12:29:05.952858 #6913] DEBUG -- :   Url Exists (0.4ms)  SELECT  1 AS one FROM "urls" WHERE "urls"."long_url" IS NULL LIMIT $1  [["LIMIT", 1]]
+D, [2017-10-09T12:29:05.953843 #6913] DEBUG -- :    (0.2ms)  ROLLBACK
+ActiveRecord::RecordInvalid: Validation failed: Long url can't be blank, Long url format is not good
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/validations.rb:78:in `raise_validation_error'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/validations.rb:50:in `save!'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/attribute_methods/dirty.rb:43:in `save!'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:313:in `block in save!'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:384:in `block in with_transaction_returning_status'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/connection_adapters/abstract/database_statements.rb:235:in `block in transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/connection_adapters/abstract/transaction.rb:194:in `block in within_new_transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/2.4.0/monitor.rb:214:in `mon_synchronize'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/connection_adapters/abstract/transaction.rb:191:in `within_new_transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/connection_adapters/abstract/database_statements.rb:235:in `transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:210:in `transaction'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:381:in `with_transaction_returning_status'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/transactions.rb:313:in `save!'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/suppressor.rb:46:in `save!'
+	from /home/donp/.rbenv/versions/2.4.2/lib/ruby/gems/2.4.0/gems/activerecord-5.1.4/lib/active_record/persistence.rb:51:in `create!'
+	from (irb):12
+	from /home/donp/.rbenv/versions/2.4.2/bin/irb:11:in `<main>'
+irb(main):013:0> 

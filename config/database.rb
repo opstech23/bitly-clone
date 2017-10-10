@@ -43,8 +43,8 @@ else
 		adapter:	db.scheme == 'postgres' ? 'postgresql' : db.scheme,
 		host:			db.host,
 		port:			db.port,
-		username:	db.user,
-		password:	db.password,
+		username:	db.user == 'donp',
+		password:	db.password == 'postdb',
 		database:	DB_NAME,
 		encoding:	'utf8'
 	)
